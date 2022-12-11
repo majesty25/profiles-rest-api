@@ -5,6 +5,7 @@ from profiles_api import models
 class HelloSerializer(serializers.Serializer):
     """Serializes a name field for testing out APIView"""
     name = serializers.CharField(max_length=10)
+    email = serializers.CharField(max_length=100)
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -12,7 +13,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserProfile
-        fields = ('id', 'email', 'name', 'password')
+        fields = ('id', 'email', 'name','is_staff', 'is_active', 'password')
         extra_kwargs = {
             'password': {
                 'write_only': True,
@@ -29,6 +30,18 @@ class UserProfileSerializer(serializers.ModelSerializer):
         )
 
         return user
+
+
+class ProfileFeedItemSerializer(serializers.ModelSerializer):
+    """Serializes profile feed items"""
+
+    class Meta:
+        model = models.ProfileFeedItem
+        fields = ('id', 'user_profile', 'status_text', 'created_on')
+        extra_kwargs = {'user_profile': {'read_only': True}}
+
+
+
 
 #         def update(self, instance, validated_data):
 #             """Handle updating user account"""
